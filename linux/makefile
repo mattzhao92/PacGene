@@ -1,6 +1,6 @@
 CC	 	= gcc
 LD	 	= gcc
-CFLAGS	 	= -Wall -g
+CFLAGS	 	= -Wall -g -lpthread
 
 LDFLAGS	 	= 
 DEFS 	 	=

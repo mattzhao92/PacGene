@@ -18,7 +18,7 @@
 #include <pthread.h>
 
 
-char trace_file_name[] = "trace.txt";
+char trace_file_name[] = "trace";
 char initial_population[] = "/Users/mattzhao/Desktop/PacGene/linux/init_population.txt";
 
 typedef struct competion_result {
@@ -208,8 +208,11 @@ void trace_string(int thread_id, char *str_trace){
     
     char trace_file_name_by_thread[256];
     bzero(trace_file_name_by_thread, 256);
-    snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s-%d", trace_file_name, thread_id);
-    
+    if (thread_id == -1) {
+        snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s", trace_file_name);
+    } else {
+        snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s-%d", trace_file_name, thread_id);
+    }
     //puts(buffer);
     printf("find a strong species for new population. %s \n", str_trace);
     
@@ -399,7 +402,7 @@ int main(int argc, const char * argv[]) {
     
     // initialize initial population
     GeneWrapper * population = initialize_population(&population_size);
-    int number_threads = 4;
+    int number_threads = 8;
     pthread_t pthread_ids[number_threads];
     struct thread_arguments_info * args[number_threads];
     while (1) {
@@ -418,7 +421,7 @@ int main(int argc, const char * argv[]) {
             info->next_population = next_population + start;
             info->population_size = population_size;
             info->thread_id = i;
-            info->number_iterations = 2;
+            info->number_iterations = 1;
             
             if (pthread_create(&pthread_ids[i], NULL, generate_new_generation, info)) {
                 fprintf(stderr, "thread initialization failed \n");
@@ -444,6 +447,7 @@ int main(int argc, const char * argv[]) {
             free(next_population[i].gene);
         }
         
+        trace_population(population, population_size, -1);
         printf("Merge population from threads finished! \n");
         
     }
