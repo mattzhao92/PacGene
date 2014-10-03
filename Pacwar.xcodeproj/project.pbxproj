@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		26FE3ACB19C12CF4009CE1F0 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 26FE3ACA19C12CF4009CE1F0 /* main.c */; };
-		26FE3ADA19C12D35009CE1F0 /* PacWarGuts.c in Sources */ = {isa = PBXBuildFile; fileRef = 26FE3AD519C12D35009CE1F0 /* PacWarGuts.c */; };
+		263E746519DE308B00622DB4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746019DE308B00622DB4 /* main.c */; };
+		263E746619DE308B00622DB4 /* PacWar.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746119DE308B00622DB4 /* PacWar.c */; };
+		263E746719DE308B00622DB4 /* sort.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746319DE308B00622DB4 /* sort.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +26,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		263E745F19DCEF8100622DB4 /* init_population.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = init_population.txt; path = linux/init_population.txt; sourceTree = SOURCE_ROOT; };
+		263E746019DE308B00622DB4 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = linux/main.c; sourceTree = SOURCE_ROOT; };
+		263E746119DE308B00622DB4 /* PacWar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PacWar.c; path = linux/PacWar.c; sourceTree = SOURCE_ROOT; };
+		263E746219DE308B00622DB4 /* PacWar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacWar.h; path = linux/PacWar.h; sourceTree = SOURCE_ROOT; };
+		263E746319DE308B00622DB4 /* sort.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sort.c; path = linux/sort.c; sourceTree = SOURCE_ROOT; };
+		263E746419DE308B00622DB4 /* sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sort.h; path = linux/sort.h; sourceTree = SOURCE_ROOT; };
 		26FE3AC719C12CF4009CE1F0 /* Pacwar */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pacwar; sourceTree = BUILT_PRODUCTS_DIR; };
-		26FE3ACA19C12CF4009CE1F0 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		26FE3AD419C12D35009CE1F0 /* PacWar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacWar.h; sourceTree = "<group>"; };
-		26FE3AD519C12D35009CE1F0 /* PacWarGuts.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PacWarGuts.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,10 +65,13 @@
 		26FE3AC919C12CF4009CE1F0 /* Pacwar */ = {
 			isa = PBXGroup;
 			children = (
+				263E746019DE308B00622DB4 /* main.c */,
+				263E746119DE308B00622DB4 /* PacWar.c */,
+				263E746219DE308B00622DB4 /* PacWar.h */,
+				263E746319DE308B00622DB4 /* sort.c */,
+				263E746419DE308B00622DB4 /* sort.h */,
+				263E745F19DCEF8100622DB4 /* init_population.txt */,
 				26FE3ADE19C12D5B009CE1F0 /* lib */,
-				26FE3AD419C12D35009CE1F0 /* PacWar.h */,
-				26FE3AD519C12D35009CE1F0 /* PacWarGuts.c */,
-				26FE3ACA19C12CF4009CE1F0 /* main.c */,
 			);
 			path = Pacwar;
 			sourceTree = "<group>";
@@ -127,8 +134,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26FE3ACB19C12CF4009CE1F0 /* main.c in Sources */,
-				26FE3ADA19C12D35009CE1F0 /* PacWarGuts.c in Sources */,
+				263E746719DE308B00622DB4 /* sort.c in Sources */,
+				263E746519DE308B00622DB4 /* main.c in Sources */,
+				263E746619DE308B00622DB4 /* PacWar.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
