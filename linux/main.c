@@ -183,7 +183,11 @@ void trace_population (GeneWrapper * wrappers, int population_size, int thread_i
     
     char trace_file_name_by_thread[256];
     bzero(trace_file_name_by_thread, 256);
-    snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s-%d", trace_file_name, thread_id);
+    if (thread_id == -1) {
+        snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s", trace_file_name);
+    } else {
+        snprintf(trace_file_name_by_thread, sizeof(trace_file_name_by_thread), "%s-%d", trace_file_name, thread_id);
+    }
     
     fp = fopen(trace_file_name_by_thread, "a");
     for (i = 0; i < population_size; i++) {
@@ -437,9 +441,9 @@ void * generate_new_generation(void *arg)
         }
         
         reduce_population_through_competition(population, combined_population, population_size, population_size * 2);
+        trace_population(population, population_size, thread_id);
+
     }
-    
-    trace_population(population, population_size, thread_id);
     return NULL;
 }
 
