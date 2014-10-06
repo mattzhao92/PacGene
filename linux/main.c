@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <pthread.h>
 
-#define NUM_THREADS 3
+#define NUM_THREADS 8
 #define NUM_ITERATIONS 4
 #define POPULATION_SIZE 30
 
@@ -264,6 +264,8 @@ GeneWrapper * initialize_population(int * population_size) {
             *population_size = *population_size + 1;
         }
         
+        printf("initial population is read from file, size is %d \n", *population_size);
+
         rewind(file);
         GeneWrapper * initial_population = (GeneWrapper *) malloc(sizeof(GeneWrapper) * (*population_size));
         
@@ -303,7 +305,7 @@ void reduce_population_through_competition(GeneWrapper * initial_population, Gen
 
 
 
-void reduce_population_through_evoluation_helper(bool * flags, int index, int flag_array_size,
+void reduce_population_through_evolution_helper(bool * flags, int index, int flag_array_size,
                               GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
                               int * first_uninitialized_gene) {
     
@@ -335,28 +337,33 @@ void reduce_population_through_evoluation_helper(bool * flags, int index, int fl
     bool options[2] = {true, false};
     for (i = 0; i < 2; i++) {
         flags[index] = options[i];
-        reduce_population_through_evoluation_helper(flags, index+1, flag_array_size, unitialize_genes, p1, p2, first_uninitialized_gene);
+        reduce_population_through_evolution_helper(flags, index+1, flag_array_size, unitialize_genes, p1, p2, first_uninitialized_gene);
     }
 }
 
 
-void reduce_population_through_evoluation(GeneWrapper * initial_population, GeneWrapper * new_population,
-                                          int initial_population_size,
+void reduce_population_through_evolution(GeneWrapper * initial_population, GeneWrapper * new_population,
+                                          int population_size,
                                           double elite_rate,
                                           double mutation_rate) {
     
-    assert(initial_population_size * elite_rate * 64 >= initial_population_size);
-    int size_to_consider = (int) (initial_population_size * elite_rate);
+    assert(population_size * elite_rate * 64 >= population_size);
+    int size_to_consider = (int) (population_size * elite_rate);
+    if (size_to_consider <= 0) {
+        size_to_consider = population_size;
+    }
     GeneWrapper combined_populaton[size_to_consider * 64];
-    int i;
+    int i,j;
     bool flags[6];
     int first_unitialized_gene = 0;
-    for (i = 0; i < size_to_consider; i++) {
-        reduce_population_through_evoluation_helper(flags, 0, 6, combined_populaton, &initial_population[initial_population_size-i-1], &new_population[initial_population_size-i-1], &first_unitialized_gene);
+    for (i = population_size - size_to_consider; i < population_size; i++) {
+        for (j = i+1; i < population_size; i++) {
+            reduce_population_through_evolution_helper(flags, 0, 6, combined_populaton, &new_population[i], &new_population[j], &first_unitialized_gene);
+        }
     }
     
     assert(first_unitialized_gene == size_to_consider * 64);
-    reduce_population_through_competition(initial_population, combined_populaton, initial_population_size, size_to_consider * 64);
+    reduce_population_through_competition(initial_population, combined_populaton, population_size, size_to_consider * 64);
     for (i = 0; i < size_to_consider * 64; i++) {
         free(combined_populaton[i].gene);
     }
@@ -500,7 +507,6 @@ int main(int argc, const char * argv[]) {
             if (pthread_create(&pthread_ids[i], NULL, generate_new_generation, info)) {
                 fprintf(stderr, "thread initialization failed \n");
             }
-            
         }
         
         for (i = 0; i < number_threads; i++) {
@@ -509,7 +515,7 @@ int main(int argc, const char * argv[]) {
         
         // store the elite guys into elite_population
         reduce_population_through_competition(population, next_population, population_size, population_size * number_threads);
-        reduce_population_through_evoluation(population, population, population_size, 0.05, 0.02);
+        reduce_population_through_evolution(population, population, population_size, 0.05, 0.02);
         
         // clean up malloced stuff
         for (i = 0; i < number_threads * population_size; i++) {
