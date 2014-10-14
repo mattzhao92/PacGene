@@ -57,6 +57,31 @@ void rand_str(char *dest, size_t length) {
     *dest = '\0';
 }
 
+void copy_population(GeneWrapper ** destination_population, GeneWrapper * source_population, int population_size) {
+    GeneWrapper * new_population = *destination_population;
+    if (*destination_population == NULL) {
+        new_population = (GeneWrapper *) malloc(sizeof(GeneWrapper) * population_size);
+    }
+    
+    int i;
+    char buffer[51];
+    for (i = 0; i < population_size; i++) {
+        new_population[i].gene = malloc(sizeof(PacGene));
+        NewStringFromGene(source_population[i].gene, buffer);
+        SetGeneFromString(buffer, new_population[i].gene);
+    }
+    *destination_population = new_population;
+}
+
+void free_population(GeneWrapper *population, int population_size) {
+    int i;
+    for (i = 0; i < population_size; i++) {
+        free(population[i].gene);
+    }
+    free(population);
+}
+
+
 
 void compete(PacGenePtr p1, PacGenePtr p2, CompetionResult* result) {
     int count[2] = {1,1};
@@ -293,14 +318,19 @@ void reduce_population_through_competition(GeneWrapper * initial_population, Gen
     int i = initial_population_size - 1;
     int j = new_population_size - 1;
     
-    mutual_compete(new_population_size, new_population);
+    GeneWrapper * new_population_copy;
+    copy_population(&new_population_copy, new_population, new_population_size);
+    
+    mutual_compete(new_population_size, new_population_copy);
     
     while (i >= 0) {
-        NewStringFromGene(new_population[j].gene, buffer);
+        NewStringFromGene(new_population_copy[j].gene, buffer);
         SetGeneFromString(buffer, initial_population[i].gene);
         i--;
         j--;
     }
+    
+    free_population(new_population_copy, new_population_size);
 }
 
 
@@ -455,21 +485,6 @@ void * generate_new_generation(void *arg)
 }
 
 
-void copy_population(GeneWrapper ** destination_population, GeneWrapper * source_population, int population_size) {
-    GeneWrapper * new_population = *destination_population;
-    if (*destination_population == NULL) {
-        new_population = (GeneWrapper *) malloc(sizeof(GeneWrapper) * population_size);
-    }
-    
-    int i;
-    char buffer[51];
-    for (i = 0; i < population_size; i++) {
-        new_population[i].gene = malloc(sizeof(PacGene));
-        NewStringFromGene(source_population[i].gene, buffer);
-        SetGeneFromString(buffer, new_population[i].gene);
-    }
-    *destination_population = new_population;
-}
 
 int main(int argc, const char * argv[]) {
     
@@ -515,7 +530,7 @@ int main(int argc, const char * argv[]) {
         
         // store the elite guys into elite_population
         reduce_population_through_competition(population, next_population, population_size, population_size * number_threads);
-        reduce_population_through_evolution(population, population, population_size, 0.05, 0.02);
+        //reduce_population_through_evolution(population, population, population_size, 0.05, 0.02);
         
         // clean up malloced stuff
         for (i = 0; i < number_threads * population_size; i++) {
