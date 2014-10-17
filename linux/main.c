@@ -18,12 +18,12 @@
 #include <assert.h>
 #include <pthread.h>
 
-#define NUM_THREADS 8
+#define NUM_THREADS 1
 #define POPULATION_SIZE 30
 
 
 char trace_file_name[] = "trace";
-char initial_population[] = "/Users/mattzhao/Desktop/Github/PacGene/linux/init_population.txt";
+char initial_population[] = "./init_population.txt";
 
 typedef struct competion_result {
     int count1;
@@ -55,6 +55,8 @@ void rand_str(char *dest, size_t length) {
     }
     *dest = '\0';
 }
+
+void trace_population (GeneWrapper * wrappers, int population_size, int thread_id);
 
 void copy_population(GeneWrapper ** destination_population, GeneWrapper * source_population, int population_size) {
     GeneWrapper * new_population = *destination_population;
@@ -463,21 +465,21 @@ void * generate_new_generation(void *arg)
             }
         }
         
-        
-        // generate the next population by getting the 1000 strongest genes
-        // from the set (population + next_population)
-        GeneWrapper combined_population[population_size * 2];
-        for (i = 0; i < population_size; i++) {
-            combined_population[i].gene = population[i].gene;
-            combined_population[i].score = 0;
-            combined_population[population_size + i].gene = next_population[i].gene;
-            combined_population[population_size + i].score = 0;
-        }
-        
-        reduce_population_through_competition(next_population, combined_population, population_size, population_size * 2);
-        trace_population(next_population, population_size, thread_id);
-        
     }
+    // generate the next population by getting the 1000 strongest genes
+    // from the set (population + next_population)
+    GeneWrapper combined_population[population_size * 2];
+    for (i = 0; i < population_size; i++) {
+        combined_population[i].gene = population[i].gene;
+        combined_population[i].score = 0;
+        combined_population[population_size + i].gene = next_population[i].gene;
+        combined_population[population_size + i].score = 0;
+    }
+    
+    
+    reduce_population_through_competition(next_population, combined_population, population_size, population_size * 2);
+    trace_population(next_population, population_size, thread_id);
+    
     return NULL;
 }
 
