@@ -15,4 +15,4 @@ for trace in traces:
                 parts = line.split()
                 gene = parts[-1][1:-1]
                 genes.add(gene)
-print('\n'.join(genes))
+print('-'.join(genes))
