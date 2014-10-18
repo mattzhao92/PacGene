@@ -96,24 +96,25 @@ int main (int argc, char **argv)
         printf("population 1 size: %d \n", p1_size);
         printf("population 2 size: %d \n", p2_size);
         
-        int p1_total_wins, p1_total_loses, p2_total_wins, p2_total_loses = 0;
+        double p1_total_wins, p1_total_loses, p2_total_wins, p2_total_loses = 0.0;
         
         int i;
         CompetionResult result;
         for (i = 0; i < p1_size; i++) {
             compete_againt_population(p1[i].gene, p2, p2_size, &result);
-            p1_total_wins += result.count1;
-            p1_total_loses += result.count2;
+            p1_total_wins += result.count1/p2_size;
+            p1_total_loses += result.count2/p2_size;
         }
         
-        for (i = 0; i < p1_size; i++) {
-            compete_againt_population(p1[i].gene, p2, p2_size, &result);
-            p2_total_wins += result.count1;
-            p2_total_loses += result.count2;
+        for (i = 0; i < p2_size; i++) {
+            compete_againt_population(p2[i].gene, p1, p1_size, &result);
+            p2_total_wins += result.count1/p1_size;
+            p2_total_loses += result.count2/p1_size;
         }
         
-        printf("p1 wins %d loses %d", p1_total_wins, p1_total_loses);
-        printf("p2 wins %d loses %d", p2_total_wins, p2_total_loses);
+        printf("###################\nResult:\n");
+        printf("p1 wins %f loses %f \n", p1_total_wins, p1_total_loses);
+        printf("p2 wins %f loses %f \n", p2_total_wins, p2_total_loses);
     }
     return 0;
 }

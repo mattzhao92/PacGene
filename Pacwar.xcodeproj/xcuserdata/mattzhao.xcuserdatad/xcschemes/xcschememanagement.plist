@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Dual.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>Pacwar.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>266A706B19F2F6E00050310C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>26FE3AC619C12CF4009CE1F0</key>
 		<dict>
 			<key>primary</key>

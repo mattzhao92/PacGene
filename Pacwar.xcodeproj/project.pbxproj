@@ -10,9 +10,26 @@
 		263E746519DE308B00622DB4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746019DE308B00622DB4 /* main.c */; };
 		263E746619DE308B00622DB4 /* PacWar.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746119DE308B00622DB4 /* PacWar.c */; };
 		263E746719DE308B00622DB4 /* sort.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746319DE308B00622DB4 /* sort.c */; };
+		266A706519F2CE990050310C /* Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 266A706319F2CE990050310C /* Utils.c */; };
+		266A707319F2F6F80050310C /* dual.c in Sources */ = {isa = PBXBuildFile; fileRef = 266A706619F2E8190050310C /* dual.c */; };
+		266A707419F2F6F80050310C /* Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 266A706319F2CE990050310C /* Utils.c */; };
+		266A707519F2F6F80050310C /* Utils.h in Sources */ = {isa = PBXBuildFile; fileRef = 266A706419F2CE990050310C /* Utils.h */; };
+		266A707719F2F6F80050310C /* PacWar.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746119DE308B00622DB4 /* PacWar.c */; };
+		266A707819F2F6F80050310C /* PacWar.h in Sources */ = {isa = PBXBuildFile; fileRef = 263E746219DE308B00622DB4 /* PacWar.h */; };
+		266A707919F2F6F80050310C /* sort.c in Sources */ = {isa = PBXBuildFile; fileRef = 263E746319DE308B00622DB4 /* sort.c */; };
+		266A707A19F2F6F80050310C /* sort.h in Sources */ = {isa = PBXBuildFile; fileRef = 263E746419DE308B00622DB4 /* sort.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		266A706A19F2F6E00050310C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		26FE3AC519C12CF4009CE1F0 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -32,10 +49,22 @@
 		263E746219DE308B00622DB4 /* PacWar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacWar.h; path = linux/PacWar.h; sourceTree = SOURCE_ROOT; };
 		263E746319DE308B00622DB4 /* sort.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sort.c; path = linux/sort.c; sourceTree = SOURCE_ROOT; };
 		263E746419DE308B00622DB4 /* sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sort.h; path = linux/sort.h; sourceTree = SOURCE_ROOT; };
+		266A706319F2CE990050310C /* Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Utils.c; path = linux/Utils.c; sourceTree = SOURCE_ROOT; };
+		266A706419F2CE990050310C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = linux/Utils.h; sourceTree = SOURCE_ROOT; };
+		266A706619F2E8190050310C /* dual.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dual.c; path = linux/dual.c; sourceTree = SOURCE_ROOT; };
+		266A706C19F2F6E00050310C /* Dual */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dual; sourceTree = BUILT_PRODUCTS_DIR; };
+		266A706E19F2F6E00050310C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		26FE3AC719C12CF4009CE1F0 /* Pacwar */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pacwar; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		266A706919F2F6E00050310C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26FE3AC419C12CF4009CE1F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -46,10 +75,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		266A706D19F2F6E00050310C /* Dual */ = {
+			isa = PBXGroup;
+			children = (
+				266A706E19F2F6E00050310C /* main.m */,
+			);
+			path = Dual;
+			sourceTree = "<group>";
+		};
 		26FE3ABE19C12CF4009CE1F0 = {
 			isa = PBXGroup;
 			children = (
 				26FE3AC919C12CF4009CE1F0 /* Pacwar */,
+				266A706D19F2F6E00050310C /* Dual */,
 				26FE3AC819C12CF4009CE1F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				26FE3AC719C12CF4009CE1F0 /* Pacwar */,
+				266A706C19F2F6E00050310C /* Dual */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,6 +104,9 @@
 		26FE3AC919C12CF4009CE1F0 /* Pacwar */ = {
 			isa = PBXGroup;
 			children = (
+				266A706619F2E8190050310C /* dual.c */,
+				266A706319F2CE990050310C /* Utils.c */,
+				266A706419F2CE990050310C /* Utils.h */,
 				263E746019DE308B00622DB4 /* main.c */,
 				263E746119DE308B00622DB4 /* PacWar.c */,
 				263E746219DE308B00622DB4 /* PacWar.h */,
@@ -86,6 +128,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		266A706B19F2F6E00050310C /* Dual */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 266A707019F2F6E00050310C /* Build configuration list for PBXNativeTarget "Dual" */;
+			buildPhases = (
+				266A706819F2F6E00050310C /* Sources */,
+				266A706919F2F6E00050310C /* Frameworks */,
+				266A706A19F2F6E00050310C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Dual;
+			productName = Dual;
+			productReference = 266A706C19F2F6E00050310C /* Dual */;
+			productType = "com.apple.product-type.tool";
+		};
 		26FE3AC619C12CF4009CE1F0 /* Pacwar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26FE3AD019C12CF4009CE1F0 /* Build configuration list for PBXNativeTarget "Pacwar" */;
@@ -111,6 +170,11 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "___FULLUSERNAME___";
+				TargetAttributes = {
+					266A706B19F2F6E00050310C = {
+						CreatedOnToolsVersion = 6.0.1;
+					};
+				};
 			};
 			buildConfigurationList = 26FE3AC219C12CF4009CE1F0 /* Build configuration list for PBXProject "Pacwar" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -125,16 +189,32 @@
 			projectRoot = "";
 			targets = (
 				26FE3AC619C12CF4009CE1F0 /* Pacwar */,
+				266A706B19F2F6E00050310C /* Dual */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		266A706819F2F6E00050310C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				266A707319F2F6F80050310C /* dual.c in Sources */,
+				266A707419F2F6F80050310C /* Utils.c in Sources */,
+				266A707519F2F6F80050310C /* Utils.h in Sources */,
+				266A707719F2F6F80050310C /* PacWar.c in Sources */,
+				266A707819F2F6F80050310C /* PacWar.h in Sources */,
+				266A707919F2F6F80050310C /* sort.c in Sources */,
+				266A707A19F2F6F80050310C /* sort.h in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26FE3AC319C12CF4009CE1F0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				263E746719DE308B00622DB4 /* sort.c in Sources */,
+				266A706519F2CE990050310C /* Utils.c in Sources */,
 				263E746519DE308B00622DB4 /* main.c in Sources */,
 				263E746619DE308B00622DB4 /* PacWar.c in Sources */,
 			);
@@ -143,6 +223,32 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		266A707119F2F6E00050310C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		266A707219F2F6E00050310C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		26FE3ACE19C12CF4009CE1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -233,6 +339,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		266A707019F2F6E00050310C /* Build configuration list for PBXNativeTarget "Dual" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				266A707119F2F6E00050310C /* Debug */,
+				266A707219F2F6E00050310C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		26FE3AC219C12CF4009CE1F0 /* Build configuration list for PBXProject "Pacwar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

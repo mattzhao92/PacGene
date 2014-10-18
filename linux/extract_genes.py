@@ -1,3 +1,5 @@
+#!/usr/bin/python
+import sys
 def extract_gene(file_name):
     with open(file_name) as f:
         for line in f:
@@ -6,7 +8,4 @@ def extract_gene(file_name):
                 gene = parts[-1][1:-1]
                 print(gene)
 
-extract_gene('trace')
-
-
-
+extract_gene(str(sys.argv[-1])
