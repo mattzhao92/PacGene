@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 def extract_gene(file_name):
     with open(file_name) as f:
         for line in f:

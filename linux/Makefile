@@ -1,20 +1,18 @@
 CC	 	= gcc
 LD	 	= gcc
-CFLAGS	 	= -Wall -g -O3 -lpthread
+CFLAGS	= -w -g -O3 -lpthread
+LDFLAGS	= 
+DEFS 	=
+all:	population  dual
 
-LDFLAGS	 	= 
-DEFS 	 	=
+population: main.o PacWar.o sort.o Utils.o
+	$(CC) $(DEFS) $(CFLAGS) $(LIB) -o $@ $?
 
-all:	population  
+dual: dual.c PacWar.o sort.o Utils.o
+	$(CC) $(DEFS) $(CFLAGS) $(LIB) -o $@ $?
 
-population: main.o PacWar.o sort.o
-	$(CC) $(DEFS) $(CFLAGS) $(LIB) -o population main.o PacWar.o sort.o
- 
 clean:
 	rm -f *.o
 	rm -f *~
-	rm -f core
-	rm -f PacWar.o
-	rm -f population
-	rm -f main.o
-	rm -f sort.o
+	rm -f dual population
+	rm -rf *.dSYM
