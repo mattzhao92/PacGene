@@ -6,7 +6,7 @@ import re
 
 env.hosts = []
 
-ranges = [1,2,3,4,5,12,13,14,15]
+ranges = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 def get_hosts():
     netid = 'zz8'
     hosts = []
