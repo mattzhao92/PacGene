@@ -23,7 +23,7 @@ int main (int argc, char **argv)
     int c;
     
     opterr = 0;
-    while ((c = getopt (argc, argv, "p::i::r::")) != -1)
+    while ((c = getopt (argc, argv, "p:i:r:")) != -1)
         switch (c)
     {
         case 'p':

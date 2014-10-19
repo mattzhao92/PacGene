@@ -118,7 +118,7 @@ def rank_exec(total_lines, ranges):
 
 
 def rank():
-    l = sum(1 for line in open('linux/post_population.txt'))
+    l = sum(1 for line in open('post_population.txt'))
     print('Number of lines in Population: %d' % l)
     with settings(hide('warnings', 'running', 'stdout', 'stderr'), warn_only=True):
         gene_to_score = {}
