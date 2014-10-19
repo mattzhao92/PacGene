@@ -28,10 +28,10 @@ def get_code_dir(hostname):
 
 @parallel
 def deploy_exec():
-    git_repo = 'https://github.com/mattzhao92/Planet-Blitz.git'
+    git_repo = 'https://github.com/mattzhao92/PacGene.git'
     code_dir = get_code_dir(env.host)
     if run('test -d %s' % code_dir).return_code != 0:
-        run('git checkout %s %s' % (git_repo, code_dir))
+        run('git clone %s %s' % (git_repo, code_dir))
     with cd(code_dir+'/linux'):
         return run("make clean && git reset --hard HEAD && git pull && make")
 
@@ -54,12 +54,27 @@ def collect_trace():
         unique_genes = set([])
         for host, result in execute(collect_trace_exec, hosts=get_hosts()).items():
             if result.return_code != 0:
-                print('%s [ERROR] %S' % (host, str(result)))
+                print('%s [ERROR] %s' % (host, str(result)))
             else:
                 print('%s [SUCCESS]' % (host))
             genes = result.split('-')
             unique_genes.update(genes)
     print('\n'.join(unique_genes))
+
+@parallel
+def clear_trace_exec():
+    code_dir = get_code_dir(env.host)
+    with cd(code_dir+'/linux'):
+        return run('make clean && rm -rf trace*')
+
+def clear_trace():
+    with settings(hide('warnings', 'running', 'stdout', 'stderr'), warn_only=True):
+        unique_genes = set([])
+        for host, result in execute(clear_trace_exec, hosts=get_hosts()).items():
+            if result.return_code != 0:
+                print('%s [ERROR] %s' % (host, str(result)))
+            else:
+                print('%s [SUCCESS]' % (host))
 
 @parallel
 def stop_task_exec():
@@ -97,21 +112,24 @@ def rank_exec(total_lines, ranges):
         end = total_lines
     else:
         end = start + total_lines/len(ranges)-1
+    print('%s [%d:%d]' % (env.host, start, end))
     with cd(code_dir):
-        return run('./rank_population %d %d' % (start,end))
+        return run('./rank_trace.py %d %d' % (start,end))
 
 
 def rank():
-    l = sum(1 for line in open('population.txt'))
+    l = sum(1 for line in open('linux/post_population.txt'))
     print('Number of lines in Population: %d' % l)
     with settings(hide('warnings', 'running', 'stdout', 'stderr'), warn_only=True):
         gene_to_score = {}
         for host, result in execute(rank_exec, total_lines=l,ranges=ranges, hosts=get_hosts()).items():
             if result.return_code != 0:
-                print('%s [ERROR] %S' % (host, str(result)))
+                print('%s [ERROR] %s' % (host, str(result)))
             else:
                 print('%s [SUCCESS]' % (host))
+                print(result)
                 for line in result.split('-'):
                     parts = line.split(' ')
+                    print(line)
                     gene_to_score[parts[1]] = int(parts[0])
                 print(line)
