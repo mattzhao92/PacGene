@@ -48,7 +48,7 @@ void compete_againt_population(PacGenePtr p, GeneWrapper * population, int popul
 void result2score(int *score1, int *score2, const CompetionResult *result);
 
 
-int compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size);
+long compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size);
 int gene_score_comparator (const void * elem1, const void * elem2);
 
 void mutual_compete(int set_size, GeneWrapper * gene_set);

@@ -53,7 +53,6 @@
 		266A706419F2CE990050310C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = linux/Utils.h; sourceTree = SOURCE_ROOT; };
 		266A706619F2E8190050310C /* dual.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dual.c; path = linux/dual.c; sourceTree = SOURCE_ROOT; };
 		266A706C19F2F6E00050310C /* Dual */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dual; sourceTree = BUILT_PRODUCTS_DIR; };
-		266A706E19F2F6E00050310C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		26FE3AC719C12CF4009CE1F0 /* Pacwar */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pacwar; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -75,19 +74,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		266A706D19F2F6E00050310C /* Dual */ = {
-			isa = PBXGroup;
-			children = (
-				266A706E19F2F6E00050310C /* main.m */,
-			);
-			path = Dual;
-			sourceTree = "<group>";
-		};
 		26FE3ABE19C12CF4009CE1F0 = {
 			isa = PBXGroup;
 			children = (
 				26FE3AC919C12CF4009CE1F0 /* Pacwar */,
-				266A706D19F2F6E00050310C /* Dual */,
 				26FE3AC819C12CF4009CE1F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -346,6 +336,7 @@
 				266A707219F2F6E00050310C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		26FE3AC219C12CF4009CE1F0 /* Build configuration list for PBXProject "Pacwar" */ = {
 			isa = XCConfigurationList;

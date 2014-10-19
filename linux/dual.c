@@ -18,11 +18,12 @@ int main (int argc, char **argv)
 {
     bool population_mode = false;
     bool individual_mode = false;
+    bool rank_mode = false;
     char * tokens = NULL;
     int c;
     
     opterr = 0;
-    while ((c = getopt (argc, argv, "p::i::")) != -1)
+    while ((c = getopt (argc, argv, "p::i::r::")) != -1)
         switch (c)
     {
         case 'p':
@@ -31,6 +32,10 @@ int main (int argc, char **argv)
             break;
         case 'i':
             individual_mode = true;
+            tokens = optarg;
+            break;
+        case 'r':
+            rank_mode = true;
             tokens = optarg;
             break;
         case '?':
@@ -47,14 +52,16 @@ int main (int argc, char **argv)
             abort ();
     }
     
-    if (!population_mode && !individual_mode) {
-        printf("please use -i -p to either specify dual in individual mode or population mode \n");
+    if (!population_mode && !individual_mode && !rank_mode) {
+        printf("please use -i -p -r to specify a mode (individual), (population), (ranking)");
     }
     
-    if (population_mode && individual_mode) {
+    
+    if ((population_mode && individual_mode) || (population_mode && rank_mode) ||
+        (individual_mode && rank_mode)) {
         printf("please specify only one mode \n");
     }
-    
+
     char * s1 = strtok(tokens, ":");
     if (s1 == NULL) {
         printf("input is in bad format: %s \n", tokens);
@@ -80,6 +87,7 @@ int main (int argc, char **argv)
         free(p1);
         free(p2);
     } else {
+        
         GeneWrapper * p1 = NULL;
         GeneWrapper * p2 = NULL;
         int p1_size, p2_size;
@@ -93,28 +101,41 @@ int main (int argc, char **argv)
             printf("reading p2 from %s failed \n", s2);
             return -1;
         }
+        
         printf("population 1 size: %d \n", p1_size);
         printf("population 2 size: %d \n", p2_size);
         
-        double p1_total_wins, p1_total_loses, p2_total_wins, p2_total_loses = 0.0;
-        
-        int i;
-        CompetionResult result;
-        for (i = 0; i < p1_size; i++) {
-            compete_againt_population(p1[i].gene, p2, p2_size, &result);
-            p1_total_wins += result.count1/p2_size;
-            p1_total_loses += result.count2/p2_size;
+        if (population_mode){
+            
+            double p1_total_wins, p1_total_loses, p2_total_wins, p2_total_loses = 0.0;
+            
+            int i;
+            CompetionResult result;
+            for (i = 0; i < p1_size; i++) {
+                compete_againt_population(p1[i].gene, p2, p2_size, &result);
+                p1_total_wins += result.count1/p2_size;
+                p1_total_loses += result.count2/p2_size;
+            }
+            
+            for (i = 0; i < p2_size; i++) {
+                compete_againt_population(p2[i].gene, p1, p1_size, &result);
+                p2_total_wins += result.count1/p1_size;
+                p2_total_loses += result.count2/p1_size;
+            }
+            
+            printf("###################\nResult:\n");
+            printf("p1 wins %f loses %f \n", p1_total_wins, p1_total_loses);
+            printf("p2 wins %f loses %f \n", p2_total_wins, p2_total_loses);
+        } else {
+            int i = 0;
+            char buffer[51];
+            for (i = 0; i < p1_size; i++) {
+                long score = compute_score(&p1[i], p2, p2_size);
+                NewStringFromGene(p1[i].gene, buffer);
+                printf("score: %ld %s\n", score, buffer);
+            }
         }
-        
-        for (i = 0; i < p2_size; i++) {
-            compete_againt_population(p2[i].gene, p1, p1_size, &result);
-            p2_total_wins += result.count1/p1_size;
-            p2_total_loses += result.count2/p1_size;
-        }
-        
-        printf("###################\nResult:\n");
-        printf("p1 wins %f loses %f \n", p1_total_wins, p1_total_loses);
-        printf("p2 wins %f loses %f \n", p2_total_wins, p2_total_loses);
     }
+
     return 0;
 }
