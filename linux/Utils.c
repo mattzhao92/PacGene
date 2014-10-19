@@ -120,9 +120,9 @@ void result2score(int *score1, int *score2, const CompetionResult *result) {
 }
 
 
-int compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size) {
+long compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size) {
     CompetionResult result;
-    int total_score = 0;
+    long total_score = 0;
     int i;
     for (i = 0; i < population_size; i++) {
         PacGenePtr opponent = population[i].gene;
@@ -397,7 +397,7 @@ void generate_new_generation(void *arg)
             SetGeneFromString(random_gene_string, next_population[i].gene);
             
             GeneWrapper current_gene = next_population[i];
-            int current_score = compute_score(&current_gene, population, population_size);
+            long current_score = compute_score(&current_gene, population, population_size);
             bool found_local_minimum = false;
             while (!found_local_minimum) {
                 bool better_neighbor_found = false;
@@ -422,9 +422,9 @@ void generate_new_generation(void *arg)
                         if (value != old_char) {
                             random_gene_string[j] = value;
                             SetGeneFromString(random_gene_string, current_gene.gene);
-                            int neighbor_score = compute_score(&current_gene, population, population_size);
+                            long neighbor_score = compute_score(&current_gene, population, population_size);
                             if (neighbor_score > current_score) {
-                                printf("[Thread:%d] better neighbor found score : %d \n", thread_id, neighbor_score);
+                                printf("[Thread:%d] better neighbor found score : %ld \n", thread_id, neighbor_score);
                                 better_neighbor_found = true;
                                 current_score = neighbor_score;
                                 break;

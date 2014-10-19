@@ -11,9 +11,9 @@
 #include <assert.h>
 #include <pthread.h>
 
-#define NUM_THREADS 1
+#define NUM_THREADS 4
 #define POPULATION_SIZE 50
-#define NUM_ITERATIONS 1
+#define NUM_ITERATIONS 200
 
 
 typedef struct competion_result {
@@ -48,7 +48,7 @@ void compete_againt_population(PacGenePtr p, GeneWrapper * population, int popul
 void result2score(int *score1, int *score2, const CompetionResult *result);
 
 
-int compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size);
+long compute_score(GeneWrapper * wrapper, GeneWrapper* population, int population_size);
 int gene_score_comparator (const void * elem1, const void * elem2);
 
 void mutual_compete(int set_size, GeneWrapper * gene_set);
