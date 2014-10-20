@@ -12,7 +12,7 @@
 
 
 extern char * trace_file_name;
-char initial_population_trace[] = "/Users/mattzhao/Desktop/Github/PacGene/linux/init_population.txt";
+char initial_population_trace[] = "./init_population.txt";
 
 int main(int argc, const char * argv[]) {
     
