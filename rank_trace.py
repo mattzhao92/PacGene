@@ -8,7 +8,7 @@ end = int(sys.argv[-1])
 cmd = 'head -%d post_population.txt | tail -%d > temp_population.txt' % (end, end-start+1)
 os.system(cmd)
 
-cmd = './linux/dual -r %s:%s > score_population.txt' % ('temp_population.txt', 'post_population.txt')
+cmd = './linux/dual -r %s:%s > score_population.txt' % ('temp_population.txt', 'baseline_population.txt')
 os.system(cmd)
 
 results = []

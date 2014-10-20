@@ -1,7 +1,7 @@
 from __future__ import with_statement
 from fabric.api import *
 from fabric.contrib.console import confirm
-import re
+import re, operator
 
 
 env.hosts = []
@@ -127,9 +127,10 @@ def rank():
                 print('%s [ERROR] %s' % (host, str(result)))
             else:
                 print('%s [SUCCESS]' % (host))
-                print(result)
                 for line in result.split('-'):
                     parts = line.split(' ')
-                    print(line)
                     gene_to_score[parts[1]] = int(parts[0])
-                print(line)
+        sorted_items = sorted(gene_to_score.items(), key=operator.itemgetter(1))
+        for item in sorted_items:
+            print(str(item[1]) + ' ' + str(item[0]))
+

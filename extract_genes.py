@@ -8,4 +8,4 @@ def extract_gene(file_name):
                 gene = parts[-1][1:-1]
                 print(gene)
 
-extract_gene(str(sys.argv[-1])
+extract_gene(str(sys.argv[-1]))
