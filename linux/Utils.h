@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <pthread.h>
 
-#define NUM_THREADS 4
+#define NUM_THREADS 5
 #define POPULATION_SIZE 50
 #define NUM_ITERATIONS 200
 
