@@ -78,7 +78,10 @@ def clear_trace():
 
 @parallel
 def stop_task_exec():
-    return run('screen -X -S gene_task kill')
+    code_dir = get_code_dir(env.host)
+    with cd(code_dir):
+        return run('./kill_all_screens')
+
 
 def stop_task():
     with settings(hide('warnings', 'running', 'stdout', 'stderr'), warn_only=True):
