@@ -457,6 +457,6 @@ void generate_new_generation(void *arg)
         
         reduce_population_through_competition(next_population, combined_population, population_size, population_size * 2);
         copy_population(&population, next_population, population_size);
-        trace_population(next_population, population_size, thread_id);
+//trace_population(next_population, population_size, thread_id);
     }
 }
