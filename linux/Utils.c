@@ -5,12 +5,21 @@ char trace_file_name[] = "trace";
 
 void rand_str(char *dest, size_t length) {
     char charset[] = "0123";
+    
+    *dest++ = '0';
+    *dest++ = '1';
+    *dest++ = '0';
+    *dest++ = '0';
+    *dest++ = '0';
+    length -= 5;
+    
     while (length-- > 0) {
         int index = (int) (((double) rand() / RAND_MAX) * 4);
         *dest++ = charset[index];
     }
     *dest = '\0';
 }
+
 
 
 void copy_population(GeneWrapper ** destination_population, GeneWrapper * source_population, int population_size) {
