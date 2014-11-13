@@ -11,9 +11,9 @@
 #include <assert.h>
 #include <pthread.h>
 
-#define NUM_THREADS 5
-#define POPULATION_SIZE 100
-#define NUM_ITERATIONS 2000
+#define NUM_THREADS 1
+#define POPULATION_SIZE 20
+#define NUM_ITERATIONS 200
 
 
 typedef struct competion_result {
@@ -62,10 +62,6 @@ void reduce_population_through_competition(GeneWrapper * initial_population, Gen
                                            int initial_population_size, int new_population_size);
 
 
-
-void reduce_population_through_evolution_helper(bool * flags, int index, int flag_array_size,
-                                                GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
-                                                int * first_uninitialized_gene);
 
 void reduce_population_through_evolution(GeneWrapper * initial_population, GeneWrapper * new_population,
                                          int population_size,

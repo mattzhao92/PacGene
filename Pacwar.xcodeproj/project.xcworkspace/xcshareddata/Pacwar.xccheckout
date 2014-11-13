@@ -14,7 +14,7 @@
 		<string>https://github.com/mattzhao92/PacGene.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Pacwar.xcodeproj/project.xcworkspace</string>
+	<string>Pacwar.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8640D8BD2819E5462318CB6E3B8F17B79238EAAC</key>

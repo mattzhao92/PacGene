@@ -5,14 +5,6 @@ char trace_file_name[] = "trace";
 
 void rand_str(char *dest, size_t length) {
     char charset[] = "0123";
-    
-    *dest++ = '0';
-    *dest++ = '1';
-    *dest++ = '0';
-    *dest++ = '0';
-    *dest++ = '0';
-    length -= 5;
-    
     while (length-- > 0) {
         int index = (int) (((double) rand() / RAND_MAX) * 4);
         *dest++ = charset[index];
@@ -173,6 +165,30 @@ void mutual_compete(int set_size, GeneWrapper * gene_set) {
 }
 
 
+void rank_compete(GeneWrapper * population_to_rank, int population_to_rank_size,
+                  GeneWrapper * base_population,    int base_population_size)
+{
+    int i, j;
+    int score1, score2;
+    for (i = 0; i < population_to_rank_size; i++) {
+        population_to_rank[i].score = 0;
+    }
+    
+    CompetionResult result;
+    for (i = 0; i < population_to_rank_size; i++) {
+        for (j = 0; j < base_population_size; j++) {
+            compete(population_to_rank[i].gene, base_population[j].gene, &result);
+            result2score(&score1, &score2, &result);
+            population_to_rank[i].score += score1;
+            population_to_rank[j].score += score2;
+        }
+    }
+    
+    MergeSort(population_to_rank,
+              population_to_rank_size,
+              sizeof(population_to_rank[0]), gene_score_comparator);
+}
+
 void trace_population (GeneWrapper * wrappers, int population_size, int thread_id) {
     FILE *fp;
     
@@ -319,20 +335,62 @@ void reduce_population_through_competition(GeneWrapper * initial_population, Gen
 }
 
 
+void reduce_population_through_ranking(GeneWrapper * population_after,  int population_size_after,
+                                       GeneWrapper * population_before, int population_size_before,
+                                       GeneWrapper * base_population,   int base_population_size)
 
-void reduce_population_through_evolution_helper(bool * flags, int index, int flag_array_size,
-                                                GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
-                                                int * first_uninitialized_gene) {
+{
+    char buffer[51];
+    int i = population_size_after - 1;
+    int j = population_size_before - 1;
+    GeneWrapper * population_before_copy = NULL;
+    copy_population(&population_before_copy, population_before, population_size_before);
     
+    rank_compete(population_before_copy, population_size_before, base_population, base_population_size);
+    
+    while (i >= 0) {
+        NewStringFromGene(population_before_copy[j].gene, buffer);
+        SetGeneFromString(buffer, population_after[i].gene);
+        i--;
+        j--;
+    }
+    free_population(population_before_copy, population_size_before);
+}
+
+
+
+void mutate_population(GeneWrapper * population, size_t population_size, double mutation_rate)
+{
+    int i,j;
+    char buffer[51];
+    bzero(buffer, 51);
+    for (i = 0; i < population_size; i++) {
+        GeneWrapper * p = &population[i];
+        NewStringFromGene(p->gene, buffer);
+        for (j = 0; j < 50; j++) {
+            if ((double)rand() / RAND_MAX < mutation_rate) {
+                buffer[j] = '0' + (rand() % 4);
+            }
+        }
+        SetGeneFromString(buffer, p->gene);
+    }
+}
+
+void crossover_population_helper(bool * flags, int index, int flag_array_size,
+                                 GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
+                                 int * first_uninitialized_gene) {
+    // printf("%d %d \n", index, flag_array_size);
     int i;
     if (index == flag_array_size) {
         char buffer[51];
         char p1buffer[51];
-        char p2buffer[52];
-        int offsets[6]  = {0, 4, 20, 23, 26, 38};
-        int sizes[6]  = {4, 16, 3, 3, 12, 12};
-        
-        GeneWrapper * unitialized_gene = &unitialize_genes[*first_uninitialized_gene];
+        char p2buffer[51];
+        int offsets[6]  = {0, 2, 20, 23, 26, 38};
+        int sizes[6]  =   {4, 16, 3, 3, 12, 12};
+        bzero(buffer, 51);
+        bzero(p1buffer, 51);
+        bzero(p2buffer, 51);
+        GeneWrapper * unitialized_gene = &(unitialize_genes[*first_uninitialized_gene]);
         
         NewStringFromGene(p2->gene, buffer);
         NewStringFromGene(p1->gene, p1buffer);
@@ -345,127 +403,78 @@ void reduce_population_through_evolution_helper(bool * flags, int index, int fla
         unitialized_gene->gene = malloc(sizeof(PacGene));
         unitialized_gene->score = 0;
         SetGeneFromString(buffer, unitialized_gene->gene);
-        *first_uninitialized_gene = * first_uninitialized_gene + 1;
-        return;
-    }
-    
-    bool options[2] = {true, false};
-    for (i = 0; i < 2; i++) {
-        flags[index] = options[i];
-        reduce_population_through_evolution_helper(flags, index+1, flag_array_size, unitialize_genes, p1, p2, first_uninitialized_gene);
+        *first_uninitialized_gene = (*first_uninitialized_gene) + 1;
+    } else {
+        bool options[2] = {true, false};
+        for (i = 0; i < 2; i++) {
+            flags[index] = options[i];
+            crossover_population_helper(flags, index+1, flag_array_size, unitialize_genes, p1, p2, first_uninitialized_gene);
+        }
     }
 }
 
-
-void reduce_population_through_evolution(GeneWrapper * initial_population, GeneWrapper * new_population,
-                                         int population_size,
-                                         double elite_rate,
-                                         double mutation_rate) {
-    
-    assert(population_size * elite_rate * 64 >= population_size);
-    int size_to_consider = (int) (population_size * elite_rate);
-    if (size_to_consider <= 0) {
-        size_to_consider = population_size;
-    }
-    GeneWrapper combined_populaton[size_to_consider * 64];
+void crossover_population(GeneWrapper * population, int population_size,
+                          GeneWrapper * base_population, int base_population_size)
+{
     int i,j;
-    bool flags[6];
+    int cross_over_size = population_size * (population_size-1) /2 *  64;
+    GeneWrapper combined_populaton[cross_over_size];
     int first_unitialized_gene = 0;
-    for (i = population_size - size_to_consider; i < population_size; i++) {
-        for (j = i+1; i < population_size; i++) {
-            reduce_population_through_evolution_helper(flags, 0, 6, combined_populaton, &new_population[i], &new_population[j], &first_unitialized_gene);
+    for (i = 0; i < population_size; i++) {
+        for (j = i+1; j < population_size; j++) {
+            GeneWrapper * p1 = &population[i];
+            GeneWrapper * p2 = &population[j];
+            bool flags[6];
+            crossover_population_helper(flags, 0, 6, combined_populaton, p1, p2, &first_unitialized_gene);
         }
     }
-    
-    assert(first_unitialized_gene == size_to_consider * 64);
-    reduce_population_through_competition(initial_population, combined_populaton, population_size, size_to_consider * 64);
-    for (i = 0; i < size_to_consider * 64; i++) {
+
+    reduce_population_through_ranking(population, population_size, combined_populaton, cross_over_size, base_population, base_population_size);
+    for (i = 0; i < cross_over_size; i++) {
         free(combined_populaton[i].gene);
     }
 }
 
-
-
 void generate_new_generation(void *arg)
 {
     struct thread_arguments_info *info = arg;
-    int thread_id = info->thread_id;
     int population_size = info->population_size;
     GeneWrapper * population = info->population;
     GeneWrapper * next_population = info->next_population;
-    char random_gene_string[51];
-    int i;
-    
-    int num_iterations = NUM_ITERATIONS;
-    
-    while (num_iterations --  >= 0) {
-        printf("[Thread:%d] iteration %d \n", thread_id, NUM_ITERATIONS - num_iterations);
-        for (i = 0; i < population_size; i++) {
-            rand_str(random_gene_string, 50);
-            random_gene_string[50] = '\0';
-            SetGeneFromString(random_gene_string, next_population[i].gene);
-            
-            GeneWrapper current_gene = next_population[i];
-            long current_score = compute_score(&current_gene, population, population_size);
-            bool found_local_minimum = false;
-            while (!found_local_minimum) {
-                bool better_neighbor_found = false;
-                int start_index = (int) (((double) rand() / RAND_MAX) * 50);
-                int j = start_index;
-                
-                do {
-                    j++;
-                    if (j >= 50) {
-                        j = 0;
-                    }
-                    char old_char = random_gene_string[j];
-                    int start_value_index = (int) (((double) rand() / RAND_MAX) * 4);
-                    int z = start_value_index;
-                    
-                    do {
-                        z ++;
-                        if (z >= 4) {
-                            z = 0;
-                        }
-                        char value = '0' + z;
-                        if (value != old_char) {
-                            random_gene_string[j] = value;
-                            SetGeneFromString(random_gene_string, current_gene.gene);
-                            long neighbor_score = compute_score(&current_gene, population, population_size);
-                            if (neighbor_score > current_score) {
-                                printf("[Thread:%d] better neighbor found score : %ld \n", thread_id, neighbor_score);
-                                better_neighbor_found = true;
-                                current_score = neighbor_score;
-                                break;
-                            } else {
-                                random_gene_string[j] = old_char;
-                            }
-                        }
-                    } while (start_value_index != z && !better_neighbor_found);
-                    
-                } while (j != start_index && !better_neighbor_found);
-                
-                if (!better_neighbor_found) {
-                    SetGeneFromString(random_gene_string, current_gene.gene);
-                    printf("[Thread:%d] found a local minimum \n", thread_id);
-                    found_local_minimum = true;
-                }
-            }
-            
-        }
-        // generate the next population by getting the 1000 strongest genes
-        // from the set (population + next_population)
-        GeneWrapper combined_population[population_size * 2];
-        for (i = 0; i < population_size; i++) {
-            combined_population[i].gene = population[i].gene;
-            combined_population[i].score = 0;
-            combined_population[population_size + i].gene = next_population[i].gene;
-            combined_population[population_size + i].score = 0;
+    int i, num_iterations = NUM_ITERATIONS;
+
+    GeneWrapper combined_populaton[population_size * 3];
+
+    for (i = 0; i < population_size * 3; i++) {
+        GeneWrapper * unitialized_gene = &combined_populaton[i];
+        unitialized_gene->gene = malloc(sizeof(PacGene));
+        unitialized_gene->score = 0;
+    }
+
+    char buffer[51];
+    bzero(buffer, 51);
+    while (num_iterations--  > 0) {
+
+        for (i = 0; i < population_size * 3; i++) {
+            NewStringFromGene(population[i % population_size].gene, buffer);
+            SetGeneFromString(buffer, combined_populaton[i].gene);
         }
         
-        
-        reduce_population_through_competition(next_population, combined_population, population_size, population_size * 2);
-        copy_population(&population, next_population, population_size);
-//trace_population(next_population, population_size, thread_id);
+        crossover_population(combined_populaton + population_size, population_size, population, population_size);
+        mutate_population(combined_populaton + population_size * 2, population_size, 0.02);
+        reduce_population_through_ranking(combined_populaton, population_size, combined_populaton, population_size * 3, population, population_size);
+        for (i = 0; i < population_size; i++) {
+            NewStringFromGene(combined_populaton[i].gene, buffer);
+            SetGeneFromString(buffer, population[i].gene);
+        }
+    }
+    
+    for (i = 0; i < population_size * 3; i++) {
+        free(combined_populaton[i].gene);
+    }
+    
+    for (i = 0; i < population_size; i++) {
+        NewStringFromGene(population[i].gene, buffer);
+        SetGeneFromString(buffer, next_population[i].gene);
     }
 }
