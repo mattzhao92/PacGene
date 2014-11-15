@@ -1,6 +1,6 @@
 CC	 	= gcc
 LD	 	= gcc
-CFLAGS	= -w -g -O3 -lpthread
+CFLAGS	= -w -g -O3 -lpthread -fopenmp
 LDFLAGS	= 
 DEFS 	=
 all:	population  dual

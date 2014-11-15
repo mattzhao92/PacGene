@@ -184,6 +184,8 @@ void mutual_compete(int set_size, GeneWrapper * gene_set) {
     for (g1_idx = 0; g1_idx < set_size; g1_idx++) {
         gene_set[g1_idx].score = 0;
     }
+    
+    #pragma omp parallel for
     for (g1_idx = 0; g1_idx < set_size; g1_idx++) {
         for (g2_idx = g1_idx + 1; g2_idx < set_size; g2_idx++){
             compete(gene_set[g1_idx].gene, gene_set[g2_idx].gene, &result);
