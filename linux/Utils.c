@@ -210,7 +210,6 @@ void rank_compete(GeneWrapper * population_to_rank, int population_to_rank_size,
     CompetionResult result;
     #pragma omp parallel for
     for (i = 0; i < population_to_rank_size; i++) {
-        printf("i:%d %d \n", i, population_to_rank_size);
         for (j = 0; j < base_population_size; j++) {
             compete(population_to_rank[i].gene, base_population[j].gene, &result);
             result2score(&score1, &score2, &result);
@@ -460,7 +459,7 @@ void crossover_population(GeneWrapper * population, int population_size,
             GeneWrapper * p1 = &population[i];
             GeneWrapper * p2 = &population[j];
             bool flags[6];
-            if ((double)rand() / RAND_MAX <= 0.25 && first_unitialized_gene < cross_over_size - 64) {
+            if ((double)rand() / RAND_MAX < 0.1 && first_unitialized_gene < cross_over_size - 64) {
                 crossover_population_helper(flags, 0, 6, combined_populaton, p1, p2, &first_unitialized_gene);
             }
         }
