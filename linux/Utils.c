@@ -208,7 +208,6 @@ void rank_compete(GeneWrapper * population_to_rank, int population_to_rank_size,
     }
     
     CompetionResult result;
-    #pragma omp parallel for
     for (i = 0; i < population_to_rank_size; i++) {
         for (j = 0; j < base_population_size; j++) {
             compete(population_to_rank[i].gene, base_population[j].gene, &result);
