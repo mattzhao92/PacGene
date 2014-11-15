@@ -12,7 +12,7 @@
 #include <pthread.h>
 
 #define NUM_THREADS 4
-#define POPULATION_SIZE 20
+#define POPULATION_SIZE 50
 #define NUM_ITERATIONS 200
 
 
