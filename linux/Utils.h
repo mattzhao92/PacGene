@@ -13,7 +13,7 @@
 
 #define NUM_THREADS 4
 #define POPULATION_SIZE 50
-#define NUM_ITERATIONS 50
+#define NUM_ITERATIONS 20
 
 
 typedef struct competion_result {
@@ -68,5 +68,6 @@ void reduce_population_through_evolution(GeneWrapper * initial_population, GeneW
                                          double elite_rate,
                                          double mutation_rate);
 
+void remove_duplicates(GeneWrapper * population, int * population_size);
 void generate_new_generation(void *arg);
 #endif
