@@ -1,5 +1,8 @@
 #include "Utils.h"
 
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+
+
 char trace_file_name[] = "trace";
 
 
@@ -142,6 +145,38 @@ int gene_score_comparator (const void * elem1, const void * elem2)
     if (f->score > s->score) return  1;
     if (f->score < s->score) return -1;
     return 0;
+}
+
+int gene_string_comparator (const void * elem1, const void * elem2)
+{
+    GeneWrapper * f = (GeneWrapper*)elem1;
+    GeneWrapper * s = (GeneWrapper*)elem2;
+    char g1[51];
+    char g2[51];
+    NewStringFromGene(f->gene, g1);
+    NewStringFromGene(s->gene, g2);
+    return strncmp(g1, g2, 50);
+}
+
+
+
+void remove_duplicates(GeneWrapper * population, int * population_size)
+{
+    MergeSort(population,
+              * population_size,
+              sizeof(population[0]), gene_string_comparator);
+    char buffer[51];
+    int i = -1, j = 0;
+    while (j < * population_size) {
+        if (i == -1 || gene_string_comparator(&population[i], &population[j]) != 0) {
+            i += 1;
+            NewStringFromGene(population[j].gene, buffer);
+            SetGeneFromString(buffer, population[i].gene);
+        } else {
+            j += 1;
+        }
+    }
+    *population_size = i + 1;
 }
 
 void mutual_compete(int set_size, GeneWrapper * gene_set) {
@@ -368,6 +403,10 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
         GeneWrapper * p = &population[i];
         NewStringFromGene(p->gene, buffer);
         for (j = 0; j < 50; j++) {
+            if (i <= 5) {
+                continue;
+            }
+            printf("f %f \n" ,(double)rand() / RAND_MAX);
             if ((double)rand() / RAND_MAX < mutation_rate) {
                 buffer[j] = '0' + (rand() % 4);
             }
@@ -385,7 +424,7 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         char buffer[51];
         char p1buffer[51];
         char p2buffer[51];
-        int offsets[6]  = {0, 2, 20, 23, 26, 38};
+        int offsets[6]  = {0, 4, 20, 23, 26, 38};
         int sizes[6]  =   {4, 16, 3, 3, 12, 12};
         bzero(buffer, 51);
         bzero(p1buffer, 51);
@@ -402,7 +441,9 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         }
         unitialized_gene->gene = malloc(sizeof(PacGene));
         unitialized_gene->score = 0;
+ 
         SetGeneFromString(buffer, unitialized_gene->gene);
+        mutate_population(unitialized_gene, 1, 0.02);
         *first_uninitialized_gene = (*first_uninitialized_gene) + 1;
     } else {
         bool options[2] = {true, false};
@@ -417,9 +458,9 @@ void crossover_population(GeneWrapper * population, int population_size,
                           GeneWrapper * base_population, int base_population_size)
 {
     int i,j;
-    int cross_over_size = population_size * (population_size-1) /2 *  64;
-    GeneWrapper combined_populaton[cross_over_size];
     int first_unitialized_gene = 0;
+    int cross_over_size = population_size * (population_size-1) /2 *  64;
+    GeneWrapper * combined_populaton = (GeneWrapper *) malloc(sizeof(GeneWrapper) * cross_over_size);
     for (i = 0; i < population_size; i++) {
         for (j = i+1; j < population_size; j++) {
             GeneWrapper * p1 = &population[i];
@@ -428,11 +469,14 @@ void crossover_population(GeneWrapper * population, int population_size,
             crossover_population_helper(flags, 0, 6, combined_populaton, p1, p2, &first_unitialized_gene);
         }
     }
-
-    reduce_population_through_ranking(population, population_size, combined_populaton, cross_over_size, base_population, base_population_size);
+    
+    int reduced_size = cross_over_size;
+    remove_duplicates(combined_populaton, &reduced_size);
+    reduce_population_through_ranking(population, population_size, combined_populaton, max(reduced_size,population_size), base_population, base_population_size);
     for (i = 0; i < cross_over_size; i++) {
         free(combined_populaton[i].gene);
     }
+    free(combined_populaton);
 }
 
 void generate_new_generation(void *arg)
@@ -443,9 +487,9 @@ void generate_new_generation(void *arg)
     GeneWrapper * next_population = info->next_population;
     int i, num_iterations = NUM_ITERATIONS;
 
-    GeneWrapper combined_populaton[population_size * 3];
+    GeneWrapper combined_populaton[population_size * 2];
 
-    for (i = 0; i < population_size * 3; i++) {
+    for (i = 0; i < population_size * 2; i++) {
         GeneWrapper * unitialized_gene = &combined_populaton[i];
         unitialized_gene->gene = malloc(sizeof(PacGene));
         unitialized_gene->score = 0;
@@ -455,21 +499,24 @@ void generate_new_generation(void *arg)
     bzero(buffer, 51);
     while (num_iterations--  > 0) {
 
-        for (i = 0; i < population_size * 3; i++) {
+        for (i = 0; i < population_size * 2; i++) {
             NewStringFromGene(population[i % population_size].gene, buffer);
             SetGeneFromString(buffer, combined_populaton[i].gene);
         }
-        
+        printf("crossover_population \n");
         crossover_population(combined_populaton + population_size, population_size, population, population_size);
-        mutate_population(combined_populaton + population_size * 2, population_size, 0.02);
-        reduce_population_through_ranking(combined_populaton, population_size, combined_populaton, population_size * 3, population, population_size);
+        printf("reduce_population_through_ranking \n");
+        int reduced_size = population_size * 2;
+        remove_duplicates(combined_populaton, &reduced_size);
+        reduce_population_through_ranking(combined_populaton, population_size, combined_populaton, max(reduced_size, population_size),
+                                          population, population_size);
         for (i = 0; i < population_size; i++) {
             NewStringFromGene(combined_populaton[i].gene, buffer);
             SetGeneFromString(buffer, population[i].gene);
         }
     }
     
-    for (i = 0; i < population_size * 3; i++) {
+    for (i = 0; i < population_size * 2; i++) {
         free(combined_populaton[i].gene);
     }
     

@@ -20,8 +20,11 @@ int main(int argc, const char * argv[]) {
     // clear_trace_file();
     
     // initialize initial population
+    GeneWrapper * orig_population = NULL;
     GeneWrapper * population = NULL;
     initialize_population(&population, initial_population_trace, true, &population_size);
+    copy_population(&orig_population, population, population_size);
+
     int number_threads = NUM_THREADS;
     pthread_t pthread_ids[number_threads];
     struct thread_arguments_info * args[number_threads];
@@ -32,7 +35,9 @@ int main(int argc, const char * argv[]) {
     }
     
     while (1) {
-        GeneWrapper next_population[number_threads * population_size];
+        GeneWrapper next_population[(number_threads + 1) * population_size];
+        GeneWrapper * reverved = next_population + number_threads * population_size;
+        copy_population(&reverved, orig_population, population_size);
         
         for (i = 0; i < number_threads; i++) {
             int start = i * population_size;
@@ -57,17 +62,24 @@ int main(int argc, const char * argv[]) {
         }
         
         // store the elite guys into elite_population
-        reduce_population_through_competition(population, next_population, population_size, population_size * number_threads);
+        int combined_size = (number_threads + 1) * population_size;
+        trace_population(next_population, combined_size, 100000);
+
+        remove_duplicates(next_population, &combined_size);
+        
+
+        reduce_population_through_competition(population, next_population, population_size, combined_size);
         //reduce_population_through_evolution(population, population, population_size, 0.05, 0.02);
         
         // clean up malloced stuff
-        for (i = 0; i < number_threads * population_size; i++) {
+        for (i = 0; i < (number_threads + 1) * population_size; i++) {
             free(next_population[i].gene);
         }
         
         // print out the current super elite population
         trace_population(population, population_size, -1);
         printf("a new generation population from threads have been merged! \n");
+        
     }
     
     //free up memory
