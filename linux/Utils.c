@@ -505,6 +505,8 @@ void generate_new_generation(void *arg)
         }
         printf("crossover_population \n");
         crossover_population(combined_populaton + population_size, population_size, population, population_size);
+        mutate_population(combined_populaton, population_size, 0.06); // high mutation
+
         printf("reduce_population_through_ranking \n");
         int reduced_size = population_size * 2;
         remove_duplicates(combined_populaton, &reduced_size);

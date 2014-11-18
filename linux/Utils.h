@@ -12,8 +12,8 @@
 #include <pthread.h>
 
 #define NUM_THREADS 4
-#define POPULATION_SIZE 50
-#define NUM_ITERATIONS 20
+#define POPULATION_SIZE 40
+#define NUM_ITERATIONS 15
 
 
 typedef struct competion_result {
