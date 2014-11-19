@@ -13,7 +13,7 @@
 
 #define NUM_THREADS 4
 #define POPULATION_SIZE 40
-#define NUM_ITERATIONS 15
+#define NUM_ITERATIONS 10
 
 
 typedef struct competion_result {

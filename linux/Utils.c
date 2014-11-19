@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include <math.h>
 
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 
@@ -415,6 +416,8 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
     }
 }
 
+
+# define NUM_CORSS_OVERS 8
 void crossover_population_helper(bool * flags, int index, int flag_array_size,
                                  GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
                                  int * first_uninitialized_gene) {
@@ -424,8 +427,8 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         char buffer[51];
         char p1buffer[51];
         char p2buffer[51];
-        int offsets[6]  = {0, 4, 20, 23, 26, 38};
-        int sizes[6]  =   {4, 16, 3, 3, 12, 12};
+        int offsets[NUM_CORSS_OVERS] =   {0, 4, 14, 19, 28, 35, 46};
+        int sizes[NUM_CORSS_OVERS]   =      {4, 10,  5,  9,  7, 11};
         bzero(buffer, 51);
         bzero(p1buffer, 51);
         bzero(p2buffer, 51);
@@ -459,14 +462,14 @@ void crossover_population(GeneWrapper * population, int population_size,
 {
     int i,j;
     int first_unitialized_gene = 0;
-    int cross_over_size = population_size * (population_size-1) /2 *  64;
+    int cross_over_size = population_size * (population_size-1) /2 * (int) (pow(2.0, 1.0 * NUM_CORSS_OVERS))  ;
     GeneWrapper * combined_populaton = (GeneWrapper *) malloc(sizeof(GeneWrapper) * cross_over_size);
     for (i = 0; i < population_size; i++) {
         for (j = i+1; j < population_size; j++) {
             GeneWrapper * p1 = &population[i];
             GeneWrapper * p2 = &population[j];
-            bool flags[6];
-            crossover_population_helper(flags, 0, 6, combined_populaton, p1, p2, &first_unitialized_gene);
+            bool flags[NUM_CORSS_OVERS];
+            crossover_population_helper(flags, 0, NUM_CORSS_OVERS, combined_populaton, p1, p2, &first_unitialized_gene);
         }
     }
     
