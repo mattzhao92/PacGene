@@ -403,7 +403,7 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
         GeneWrapper * p = &population[i];
         NewStringFromGene(p->gene, buffer);
         for (j = 0; j < 50; j++) {
-            if (i <= 5) {
+            if (i <= 3) {
                 continue;
             }
             printf("f %f \n" ,(double)rand() / RAND_MAX);
@@ -416,7 +416,7 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
 }
 
 
-# define NUM_CORSS_OVERS 8
+# define NUM_CORSS_OVERS 7
 void crossover_population_helper(bool * flags, int index, int flag_array_size,
                                  GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
                                  int * first_uninitialized_gene) {
@@ -426,8 +426,8 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         char buffer[51];
         char p1buffer[51];
         char p2buffer[51];
-        int offsets[NUM_CORSS_OVERS] =   {0, 4, 14, 19, 28, 35, 46};
-        int sizes[NUM_CORSS_OVERS]   =      {4, 10,  5,  9,  7, 11};
+        int offsets[NUM_CORSS_OVERS] =   {0, 6, 14, 23, 30, 39, 45};
+        int sizes[NUM_CORSS_OVERS]   =      {6, 8,  9,  7,  9,  5, 5};
         bzero(buffer, 51);
         bzero(p1buffer, 51);
         bzero(p2buffer, 51);
