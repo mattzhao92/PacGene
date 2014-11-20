@@ -216,7 +216,6 @@ void rank_compete(GeneWrapper * population_to_rank, int population_to_rank_size,
             compete(population_to_rank[i].gene, base_population[j].gene, &result);
             result2score(&score1, &score2, &result);
             population_to_rank[i].score += score1;
-            population_to_rank[j].score += score2;
         }
     }
     
