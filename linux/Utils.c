@@ -416,7 +416,7 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
 }
 
 
-# define NUM_CORSS_OVERS 7
+# define NUM_CROSS_OVERS 7
 void crossover_population_helper(bool * flags, int index, int flag_array_size,
                                  GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
                                  int * first_uninitialized_gene) {
@@ -426,8 +426,10 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         char buffer[51];
         char p1buffer[51];
         char p2buffer[51];
-        int offsets[NUM_CORSS_OVERS] =   {0, 6, 14, 23, 30, 39, 45};
-        int sizes[NUM_CORSS_OVERS]   =      {6, 8,  9,  7,  9,  5, 5};
+
+        int offsets[NUM_CROSS_OVERS]  = {0, 4, 20, 23, 26, 38};
+        int sizes[NUM_CROSS_OVERS]  =      {4, 16,  3,  3, 12, 12};
+
         bzero(buffer, 51);
         bzero(p1buffer, 51);
         bzero(p2buffer, 51);
@@ -461,14 +463,14 @@ void crossover_population(GeneWrapper * population, int population_size,
 {
     int i,j;
     int first_unitialized_gene = 0;
-    int cross_over_size = population_size * (population_size-1) /2 * (int) (pow(2.0, 1.0 * NUM_CORSS_OVERS))  ;
+    int cross_over_size = population_size * (population_size-1) /2 * (int) (pow(2.0, 1.0 * NUM_CROSS_OVERS))  ;
     GeneWrapper * combined_populaton = (GeneWrapper *) malloc(sizeof(GeneWrapper) * cross_over_size);
     for (i = 0; i < population_size; i++) {
         for (j = i+1; j < population_size; j++) {
             GeneWrapper * p1 = &population[i];
             GeneWrapper * p2 = &population[j];
-            bool flags[NUM_CORSS_OVERS];
-            crossover_population_helper(flags, 0, NUM_CORSS_OVERS, combined_populaton, p1, p2, &first_unitialized_gene);
+            bool flags[NUM_CROSS_OVERS];
+            crossover_population_helper(flags, 0, NUM_CROSS_OVERS, combined_populaton, p1, p2, &first_unitialized_gene);
         }
     }
     
