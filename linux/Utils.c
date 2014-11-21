@@ -404,9 +404,18 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
         NewStringFromGene(p->gene, buffer);
         for (j = 0; j < 50; j++) {
             if (i <= 3) {
-                continue;
+                if (i == 1) {
+                    if ((double)rand() / RAND_MAX < mutation_rate) {
+                        if ((double)rand() / RAND_MAX < 0.5) {
+                            buffer[i] = '1';
+                        } else {
+                            buffer[i] = '0';
+                        }
+                    }
+                } else {
+                    continue;
+                }
             }
-            printf("f %f \n" ,(double)rand() / RAND_MAX);
             if ((double)rand() / RAND_MAX < mutation_rate) {
                 buffer[j] = '0' + (rand() % 4);
             }
@@ -447,7 +456,7 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         unitialized_gene->score = 0;
  
         SetGeneFromString(buffer, unitialized_gene->gene);
-        mutate_population(unitialized_gene, 1, 0.02);
+        mutate_population(unitialized_gene, 1, 0.09);
         *first_uninitialized_gene = (*first_uninitialized_gene) + 1;
     } else {
         bool options[2] = {true, false};
@@ -509,7 +518,7 @@ void generate_new_generation(void *arg)
         }
         printf("crossover_population \n");
         crossover_population(combined_populaton + population_size, population_size, population, population_size);
-        mutate_population(combined_populaton, population_size, 0.06); // high mutation
+        mutate_population(combined_populaton, population_size, 0.1); // high mutation
 
         printf("reduce_population_through_ranking \n");
         int reduced_size = population_size * 2;
