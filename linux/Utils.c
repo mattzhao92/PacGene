@@ -409,7 +409,6 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
                         if ((double)rand() / RAND_MAX < 0.5) {
                             buffer[i] = '1';
                         } else {
-                            buffer[i] = '0';
                             buffer[i] = '3';
                         }
                     }
@@ -426,7 +425,7 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
 }
 
 
-# define NUM_CROSS_OVERS 8
+# define NUM_CROSS_OVERS 10
 void crossover_population_helper(bool * flags, int index, int flag_array_size,
                                  GeneWrapper * unitialize_genes, GeneWrapper* p1, GeneWrapper* p2,
                                  int * first_uninitialized_gene) {
@@ -437,8 +436,8 @@ void crossover_population_helper(bool * flags, int index, int flag_array_size,
         char p1buffer[51];
         char p2buffer[51];
 
-        int offsets[NUM_CROSS_OVERS]  = {0, 4, 20, 23, 26, 32, 38, 42};
-        int sizes[NUM_CROSS_OVERS]  =      {4, 16,  3,  3,  6,  6,  4, 8};
+        int offsets[NUM_CROSS_OVERS]  = {0, 4, 7, 12, 16, 21, 26, 33, 38, 44};
+        int sizes[NUM_CROSS_OVERS]  =      {4, 3,  5,  4,  5,  5,  7,  5,  6, 6};
 
         bzero(buffer, 51);
         bzero(p1buffer, 51);
