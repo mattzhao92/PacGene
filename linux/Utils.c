@@ -410,6 +410,7 @@ void mutate_population(GeneWrapper * population, size_t population_size, double 
                             buffer[i] = '1';
                         } else {
                             buffer[i] = '0';
+                            buffer[i] = '3';
                         }
                     }
                 } else {
